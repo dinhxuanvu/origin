@@ -12,6 +12,7 @@ import (
 	"github.com/openshift/origin/pkg/defaultinvariants"
 	"github.com/openshift/origin/pkg/duplicateevents"
 	"github.com/openshift/origin/pkg/monitor"
+	"github.com/openshift/origin/pkg/monitor/clientview"
 	"github.com/openshift/origin/pkg/monitor/intervalcreation"
 	"github.com/openshift/origin/pkg/monitor/monitorapi"
 	"github.com/openshift/origin/pkg/monitor/nodedetails"
@@ -170,7 +171,15 @@ func (o *MonitorEventsOptions) Stop(ctx context.Context, restConfig *rest.Config
 	if err != nil {
 		fmt.Fprintf(o.ErrOut, "FetchEventIntervalsForAllAlerts error but continuing processing: %v", err)
 	}
+
+	// add events from rest client so we can create the intervals
+	clientEventIntervals, err := clientview.FetchEventIntervalsForRestClientError(ctx, restConfig, *o.startTime)
+	if err != nil {
+		fmt.Fprintf(o.ErrOut, "FetchEventIntervalsForRestClientError error but continuing processing: %v", err)
+	}
+
 	events = append(events, alertEventIntervals...)
+	events = append(events, clientEventIntervals...)
 	o.monitor.AddIntervals(alertEventIntervals...) // add intervals to the recorded events, not just the random copy
 	o.monitor.AddIntervals(intervalcreation.CalculateMoreIntervals(events, o.recordedResources, fromTime, endTime)...)
 
