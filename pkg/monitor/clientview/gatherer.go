@@ -104,11 +104,6 @@ func (g *gatherer) parse(result prometheustypes.Value) ([]monitorapi.Interval, e
 				component := component(series.Metric)
 				locator := fmt.Sprintf("client/APIError source/%s node/%s component/%s", source, instance(series.Metric), component)
 
-				// TODO: the tool tip in e2e timeline does not display
-				//  code=<error>, maybe use html.EscapeString()?
-				if series.Metric["code"] == "<error>" {
-					series.Metric["code"] = "error"
-				}
 				interval := monitorapi.Interval{
 					Condition: monitorapi.Condition{
 						Level:   monitorapi.Error,

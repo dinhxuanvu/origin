@@ -20,7 +20,7 @@
         {
             "level": "Info",
             "locator": "ns/openshift-apiserver pod/apiserver-5b9785f765-qk9hl uid/d5f66519-ca7a-4808-94a0-b889552d411c container/fix-audit-permissions",
-            "message": "constructed/pod-lifecycle-constructor reason/NotReady missed real \"NotReady\"",
+            "message": "constructed/pod-lifecycle-constructor reason/NotReady missed real \u0026#34;NotReady\u0026#34;",
             "tempStructuredLocator": {
                 "type": "",
                 "keys": null
@@ -37,7 +37,7 @@
         {
             "level": "Info",
             "locator": "ns/openshift-apiserver pod/apiserver-5b9785f765-qk9hl uid/d5f66519-ca7a-4808-94a0-b889552d411c container/openshift-apiserver",
-            "message": "constructed/pod-lifecycle-constructor reason/NotReady missed real \"NotReady\"",
+            "message": "constructed/pod-lifecycle-constructor reason/NotReady missed real \u0026#34;NotReady\u0026#34;",
             "tempStructuredLocator": {
                 "type": "",
                 "keys": null
@@ -54,7 +54,7 @@
         {
             "level": "Info",
             "locator": "ns/openshift-apiserver pod/apiserver-5b9785f765-qk9hl uid/d5f66519-ca7a-4808-94a0-b889552d411c container/openshift-apiserver-check-endpoints",
-            "message": "constructed/pod-lifecycle-constructor reason/NotReady missed real \"NotReady\"",
+            "message": "constructed/pod-lifecycle-constructor reason/NotReady missed real \u0026#34;NotReady\u0026#34;",
             "tempStructuredLocator": {
                 "type": "",
                 "keys": null

@@ -3,6 +3,7 @@ package monitorserialization
 import (
 	"encoding/json"
 	"fmt"
+	"html"
 	"io/ioutil"
 	"sort"
 
@@ -109,8 +110,8 @@ func EventsIntervalsToJSON(events monitorapi.Intervals) ([]byte, error) {
 func monitorEventIntervalToEventInterval(interval monitorapi.Interval) EventInterval {
 	ret := EventInterval{
 		Level:             fmt.Sprintf("%v", interval.Level),
-		Locator:           interval.Locator,
-		Message:           interval.Message,
+		Locator:           html.EscapeString(interval.Locator),
+		Message:           html.EscapeString(interval.Message),
 		StructuredLocator: interval.StructuredLocator,
 		StructuredMessage: interval.StructuredMessage,
 

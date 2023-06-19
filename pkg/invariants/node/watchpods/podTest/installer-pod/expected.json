@@ -37,7 +37,7 @@
         {
             "level": "Info",
             "locator": "ns/openshift-etcd pod/installer-9-ci-op-97t906zm-db044-bwrrn-master-0 uid/6fb10c53-7ed9-4f51-88db-f8a689050f21 container/installer",
-            "message": "constructed/pod-lifecycle-constructor reason/ContainerWait missed real \"ContainerWait\"",
+            "message": "constructed/pod-lifecycle-constructor reason/ContainerWait missed real \u0026#34;ContainerWait\u0026#34;",
             "tempStructuredLocator": {
                 "type": "",
                 "keys": null
