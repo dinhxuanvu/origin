@@ -37,7 +37,7 @@
         {
             "level": "Info",
             "locator": "ns/openshift-marketplace pod/community-operators-sp6lm uid/efb1885a-1fe1-4f5b-ad41-044e55f806a9 container/registry-server",
-            "message": "constructed/pod-lifecycle-constructor reason/ContainerWait missed real \"ContainerWait\"",
+            "message": "constructed/pod-lifecycle-constructor reason/ContainerWait missed real \u0026#34;ContainerWait\u0026#34;",
             "tempStructuredLocator": {
                 "type": "",
                 "keys": null
@@ -54,7 +54,7 @@
         {
             "level": "Info",
             "locator": "ns/openshift-marketplace pod/community-operators-sp6lm uid/efb1885a-1fe1-4f5b-ad41-044e55f806a9 container/registry-server",
-            "message": "constructed/pod-lifecycle-constructor reason/NotReady missed real \"NotReady\"",
+            "message": "constructed/pod-lifecycle-constructor reason/NotReady missed real \u0026#34;NotReady\u0026#34;",
             "tempStructuredLocator": {
                 "type": "",
                 "keys": null

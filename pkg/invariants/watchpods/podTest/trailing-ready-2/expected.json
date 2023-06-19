@@ -37,7 +37,7 @@
         {
             "level": "Info",
             "locator": "ns/openshift-machine-config-operator pod/machine-config-operator-7d5bf78cff-bbbwb uid/27e57fd1-c8f9-4528-8a04-0054dad5d38f container/machine-config-operator",
-            "message": "constructed/pod-lifecycle-constructor reason/NotReady missed real \"NotReady\"",
+            "message": "constructed/pod-lifecycle-constructor reason/NotReady missed real \u0026#34;NotReady\u0026#34;",
             "tempStructuredLocator": {
                 "type": "",
                 "keys": null
