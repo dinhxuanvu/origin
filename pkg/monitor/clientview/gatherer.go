@@ -102,7 +102,8 @@ func (g *gatherer) parse(result prometheustypes.Value) ([]monitorapi.EventInterv
 				//  if we want to display the increment.
 				source := source(g.serviceNetworkIP, series.Metric)
 				component := component(series.Metric)
-				locator := fmt.Sprintf("client/APIError source/%s node/%s component/%s", source, instance(series.Metric), component)
+				namespace := string(series.Metric["namespace"])
+				locator := fmt.Sprintf("client/APIError source/%s node/%s namespace/%s component/%s", source, instance(series.Metric), namespace, component)
 
 				interval := monitorapi.EventInterval{
 					Condition: monitorapi.Condition{
