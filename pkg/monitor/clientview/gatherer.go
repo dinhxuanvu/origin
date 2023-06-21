@@ -21,7 +21,9 @@ import (
 	"github.com/openshift/origin/pkg/monitor/monitorapi"
 )
 
-func FetchEventIntervalsForRestClientError(ctx context.Context, config *rest.Config, startTime time.Time) ([]monitorapi.EventInterval, error) {
+var scrapePeriod = 30 * time.Second
+
+func FetchEventIntervalsForRestClientError(ctx context.Context, config *rest.Config, startTime time.Time) ([]monitorapi.Interval, error) {
 	kubeClient, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		return nil, err
@@ -69,8 +71,8 @@ func (g *gatherer) query(ctx context.Context) (prometheustypes.Value, error) {
 	result, warnings, err := g.client.QueryRange(ctx, query, prometheusv1.Range{
 		Start: g.start,
 		End:   time.Now(),
-		// data is scraped every 30s in OpenShift, is there a value in finer step?
-		Step: 2 * time.Second,
+		// data is scraped every 30s in OpenShift
+		Step: scrapePeriod,
 	})
 	if err != nil {
 		framework.Logf("[RestClientParser]: prometheus client returned error: %v", err)
@@ -113,7 +115,7 @@ func (g *gatherer) parse(result prometheustypes.Value) ([]monitorapi.EventInterv
 							previous.String(), current.Value.String(), series.Metric.String()),
 					},
 					From: current.Timestamp.Time(),
-					// TODO: for now give it a 1s interval
+					// TODO: find how long did the requests took using data from rest_client_request_duration_seconds_sum?
 					To: current.Timestamp.Time().Add(time.Second),
 				}
 				framework.Logf("%+v", interval)
