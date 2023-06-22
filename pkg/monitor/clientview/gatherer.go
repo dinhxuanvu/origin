@@ -23,7 +23,7 @@ import (
 
 var scrapePeriod = 30 * time.Second
 
-func FetchEventIntervalsForRestClientError(ctx context.Context, config *rest.Config, startTime time.Time) ([]monitorapi.Interval, error) {
+func FetchEventIntervalsForRestClientError(ctx context.Context, config *rest.Config, startTime time.Time) ([]monitorapi.EventInterval, error) {
 	kubeClient, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		return nil, err
@@ -106,13 +106,16 @@ func (g *gatherer) parse(result prometheustypes.Value) ([]monitorapi.EventInterv
 				component := component(series.Metric)
 				namespace := string(series.Metric["namespace"])
 				locator := fmt.Sprintf("client/APIError source/%s node/%s namespace/%s component/%s", source, instance(series.Metric), namespace, component)
-
+				message := fmt.Sprintf("client observed an API error - %s", series.Metric.String())
+				intervalsCount := int(current.Value) - int(previous)
+				if intervalsCount > 1 {
+					message = fmt.Sprintf("%s (%d times)", message, intervalsCount)
+				}
 				interval := monitorapi.EventInterval{
 					Condition: monitorapi.Condition{
 						Level:   monitorapi.Error,
 						Locator: locator,
-						Message: fmt.Sprintf("client observed an API error - previous=%s current=%s %s",
-							previous.String(), current.Value.String(), series.Metric.String()),
+						Message: message,
 					},
 					From: current.Timestamp.Time(),
 					// TODO: find how long did the requests took using data from rest_client_request_duration_seconds_sum?
