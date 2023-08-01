@@ -23,7 +23,7 @@ import (
 
 var scrapePeriod = 30 * time.Second
 
-func FetchEventIntervalsForRestClientError(ctx context.Context, config *rest.Config, startTime time.Time) ([]monitorapi.EventInterval, error) {
+func FetchEventIntervalsForRestClientError(ctx context.Context, config *rest.Config, startTime time.Time) ([]monitorapi.Interval, error) {
 	kubeClient, err := kubernetes.NewForConfig(config)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func FetchEventIntervalsForRestClientError(ctx context.Context, config *rest.Con
 	}
 	_, err = kubeClient.CoreV1().Namespaces().Get(ctx, "openshift-monitoring", metav1.GetOptions{})
 	if apierrors.IsNotFound(err) {
-		return []monitorapi.EventInterval{}, nil
+		return []monitorapi.Interval{}, nil
 	}
 
 	kubeSvc, err := kubeClient.CoreV1().Services(metav1.NamespaceDefault).Get(ctx, "kubernetes", metav1.GetOptions{})
@@ -85,8 +85,8 @@ func (g *gatherer) query(ctx context.Context) (prometheustypes.Value, error) {
 	return result, nil
 }
 
-func (g *gatherer) parse(result prometheustypes.Value) ([]monitorapi.EventInterval, error) {
-	intervals := []monitorapi.EventInterval{}
+func (g *gatherer) parse(result prometheustypes.Value) ([]monitorapi.Interval, error) {
+	intervals := []monitorapi.Interval{}
 	if result.Type() != prometheustypes.ValMatrix {
 		return nil, fmt.Errorf("expected a Matrix")
 	}
@@ -106,16 +106,12 @@ func (g *gatherer) parse(result prometheustypes.Value) ([]monitorapi.EventInterv
 				component := component(series.Metric)
 				namespace := string(series.Metric["namespace"])
 				locator := fmt.Sprintf("client/APIError source/%s node/%s namespace/%s component/%s", source, instance(series.Metric), namespace, component)
-				message := fmt.Sprintf("client observed an API error - %s", series.Metric.String())
-				intervalsCount := int(current.Value) - int(previous)
-				if intervalsCount > 1 {
-					message = fmt.Sprintf("%s (%d times)", message, intervalsCount)
-				}
-				interval := monitorapi.EventInterval{
+				interval := monitorapi.Interval{
 					Condition: monitorapi.Condition{
 						Level:   monitorapi.Error,
 						Locator: locator,
-						Message: message,
+						Message: fmt.Sprintf("client observed an API error - previous=%s current=%s %s",
+							previous.String(), current.Value.String(), series.Metric.String()),
 					},
 					From: current.Timestamp.Time(),
 					// TODO: find how long did the requests took using data from rest_client_request_duration_seconds_sum?
