@@ -2,9 +2,11 @@ package alertanalyzer
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/openshift/origin/pkg/invariants"
+	"github.com/openshift/origin/pkg/monitor/clientview"
 	"github.com/openshift/origin/pkg/monitor/monitorapi"
 	"github.com/openshift/origin/pkg/test/ginkgo/junitapi"
 	"k8s.io/client-go/rest"
@@ -25,6 +27,9 @@ func (w *alertSummarySerializer) StartCollection(ctx context.Context, adminRESTC
 
 func (w *alertSummarySerializer) CollectData(ctx context.Context, storageDir string, beginning, end time.Time) (monitorapi.Intervals, []*junitapi.JUnitTestCase, error) {
 	intervals, err := fetchEventIntervalsForAllAlerts(ctx, w.adminRESTConfig, beginning)
+	clientEventIntervals, err2 := clientview.FetchEventIntervalsForRestClientError(ctx, w.adminRESTConfig, beginning)
+	intervals = append(intervals, clientEventIntervals...)
+	err = errors.Join(err, err2)
 	return intervals, nil, err
 }
 
